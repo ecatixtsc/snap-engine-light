@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ Copyright (C) 2011 Brockmann Consult GmbH (info@brockmann-consult.de)
+~
+~ This program is free software; you can redistribute it and/or modify it
+~ under the terms of the GNU General Public License as published by the Free
+~ Software Foundation; either version 3 of the License, or (at your option)
+~ any later version.
+~ This program is distributed in the hope that it will be useful, but WITHOUT
+~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+~ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+~ more details.
+~
+~ You should have received a copy of the GNU General Public License along
+~ with this program; if not, see http://www.gnu.org/licenses/
+-->
+<!--suppress MavenModelInspection -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>snap-engine-light</artifactId>
+        <groupId>org.esa.snap</groupId>
+        <version>10.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>snap-gpf</artifactId>
+
+    <name>SNAP Graph Processing Framework (GPF)</name>
+    <description>The basic framework for processing using Operators and the GPT.</description>
+
+    <properties>
+        <jdkToolsPath>${java.home}/../lib/tools.jar</jdkToolsPath>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-glayer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-jai</artifactId>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-ui</artifactId>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>snap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-binding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>ceres-metadata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-metadata</artifactId>
+            <version>20.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.esa.snap</groupId>
+            <artifactId>snap-core</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <!--Added for test
+                <dependency>
+                    <groupId>org.esa.s1tbx</groupId>
+                    <artifactId>s1tbx-op-sar-processing</artifactId>
+                    <version>10.0.0-SNAPSHOT</version>
+                </dependency>
+        -->
+      
+    </dependencies>
+    <!--
+    <profiles>
+        <profile>
+            <id>jdk-tools</id>
+            <activation>
+                <property>
+                     Maybe this needs to be updated when detecting JDK distributions where
+                    the following does not apply. Currently, it works for the JDKs from Oracle, Adopt, Azul and Amazon
+                    
+                    <name>java.vm.specification.name</name>
+                    <value>Java Virtual Machine Specification</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>11</version>
+                    <scope>system</scope>
+                    <systemPath>${jdkToolsPath}</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.netbeans.utilities</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>org.esa.snap.core.gpf.*</publicPackage>
+                    </publicPackages>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration> 
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix></classpathPrefix>                          
+                        </manifest>
+                    </archive>                 
+                </configuration>               
+            </plugin>
+
+            <!--execute each test class in its own JVM process.
+               Added because of problem on some platforms when executing gpf tests.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <reuseForks>false</reuseForks>
+                    <forkCount>1</forkCount>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>                           
+                            <mainClass>org.esa.snap.core.gpf.main.GPT</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef></descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
